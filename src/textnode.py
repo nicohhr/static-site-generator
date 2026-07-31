@@ -1,14 +1,16 @@
 from enum import Enum
 from typing import override
 
+from src.leafnode import LeafNode
+
 
 class TextType(Enum):
-    PLAIN_TEXT = "plain"
-    ITALIC_TEXT = "italic"
-    CODE_TEXT = "code"
-    LINK_TEXT = "link"
-    IMAGE_TEXT = "image"
-    BOLD_TEXT = "bold"
+    PLAIN = "plain"
+    ITALIC = "italic"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
+    BOLD = "bold"
 
 
 class TextNode:
@@ -29,3 +31,20 @@ class TextNode:
     @override
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
+    match text_node.text_type:
+        case TextType.PLAIN:
+            return LeafNode(None, text_node.text)
+        case TextType.BOLD:
+            return LeafNode("b", text_node.text)
+        case TextType.ITALIC:
+            return LeafNode("i", text_node.text)
+        case TextType.CODE:
+            return LeafNode("code", text_node.text)
+        case TextType.LINK:
+            return LeafNode("a", text_node.text, props={"href": ""})
+        case TextType.IMAGE:
+            return LeafNode("img", props={"src": "", "alt": ""})
+        case _:
+            raise Exception("TextType not implemented.")
