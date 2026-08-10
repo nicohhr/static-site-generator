@@ -24,13 +24,16 @@ class TextNode:
         if not isinstance(value, TextNode):
             return False
 
-        return(self.text == value.text
+        return (
+            self.text == value.text
             and self.text_type == value.text_type
-            and self.url == value.url)
+            and self.url == value.url
+        )
 
     @override
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
 
 def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     match text_node.text_type:
