@@ -1,6 +1,4 @@
-from markdown_utils import (
-    split_nodes_delimiter,
-)
+from markdown_utils import *
 import unittest
 from textnode import TextNode, TextType
 
@@ -63,16 +61,14 @@ class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold_and_italic(self):
         node = TextNode("**bold** and _italic_", TextType.PLAIN)
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
-        print(new_nodes)
         new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)
-        print(new_nodes)
         self.assertListEqual(
             [
                 TextNode("bold", TextType.BOLD),
                 TextNode(" and ", TextType.PLAIN),
                 TextNode("italic", TextType.ITALIC),
             ],
-            new_nodes
+            new_nodes,
         )
 
     def test_delim_code(self):
@@ -86,6 +82,45 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+    def test_extract_images(self):
+
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        res = extract_markdown_images(text)
+        self.assertEqual(
+            res,
+            [
+                ("rick roll", "https://i.imgur.com/aKaOqIh.gif"),
+                ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg"),
+            ],
+        )
+
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_images_empty(self):
+
+        text = ""
+        res = extract_markdown_images(text)
+        self.assertEqual(res, [])
+
+    def test_extract_links(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        res = extract_markdown_links(text)
+        self.assertEqual(extract_markdown_links(text), res)
+
+    def test_image_in_url(self):
+        text = "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        res = extract_markdown_links(text)
+        self.assertEqual(res, [])
+
+    def test_url_in_image(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        res = extract_markdown_images(text)
+        self.assertEqual(res, [])
 
 
 if __name__ == "__main__":
