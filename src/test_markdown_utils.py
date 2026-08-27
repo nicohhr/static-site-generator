@@ -1,5 +1,6 @@
-from markdown_utils import *
 import unittest
+
+from markdown_utils import *
 from textnode import TextNode, TextType
 
 
@@ -121,6 +122,43 @@ class TestInlineMarkdown(unittest.TestCase):
         text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
         res = extract_markdown_images(text)
         self.assertEqual(res, [])
+
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.PLAIN,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.PLAIN),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.PLAIN),
+                TextNode(
+                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+        )
+
+    def test_split_links(self):
+        node = TextNode(
+            "this is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+            TextType.PLAIN,
+        )
+        new_nodes = split_nodes_link([node])
+
+        self.assertEqual(
+            new_nodes,
+            [
+                TextType("this is text with a link ", TextType.PLAIN),
+                TextType("to boot dev", TextType.LINK, "https://www.boot.dev"),
+                TextType(" and ", TextType.PLAIN),
+                TextType(
+                    "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+                ),
+            ],
+        )
 
 
 if __name__ == "__main__":

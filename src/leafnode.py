@@ -1,9 +1,15 @@
-from htmlnode import HTMLNode
 from typing import override
 
-class LeafNode(HTMLNode):
+from htmlnode import HTMLNode
 
-    def __init__(self, tag: str | None = None, value: str | None = None, props: dict[str, str] | None = None) -> None:
+
+class LeafNode(HTMLNode):
+    def __init__(
+        self,
+        tag: str | None = None,
+        value: str | None = None,
+        props: dict[str, str] | None = None,
+    ) -> None:
         super().__init__(tag, value, None, props)
 
     def to_html(self):
@@ -17,4 +23,4 @@ class LeafNode(HTMLNode):
 
     @override
     def __repr__(self) -> str:
-        return f"Tag: \"{self.tag}\" | Value: \"{self.value}\"| Props: \"{self.props}\""
+        return f'Tag: "{self.tag}" | Value: "{self.value}"| Props: "{self.props}"'

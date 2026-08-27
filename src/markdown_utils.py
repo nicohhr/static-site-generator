@@ -1,5 +1,6 @@
-from textnode import TextNode, TextType
 import re
+
+from textnode import TextNode, TextType
 
 
 def split_nodes_delimiter(
@@ -13,7 +14,7 @@ def split_nodes_delimiter(
         if node.text_type == TextType.PLAIN:
             splited_text = node.text.split(delimiter)
             if len(splited_text) % 2 == 0:
-                raise Exception("Error. Non closing delimiters")
+                raise Exception("Error. Non closing delimiters")  # noqa: TRY002
             for i in range(len(splited_text)):
                 if splited_text[i] == "":
                     continue
@@ -34,3 +35,26 @@ def extract_markdown_images(text_md: str) -> list[tuple[str, str]]:
 def extract_markdown_links(text_md: str) -> list[tuple[str, str]] | None:
     matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text_md)
     return matches
+
+
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
+    for node in old_nodes:
+        if node.text_type == TextType.PLAIN:
+            # Extract Text
+            img_match = extract_markdown_images(node.text)
+            # Split
+            remaining_text = node.text
+            for match in img_match:
+                splited_text = remaining_text.split(f"![{match[0]}]({match[1]})", 1)
+                remaining_text = splited_text[1]
+                new_nodes.append(TextNode(splited_text[0], TextType.PLAIN))
+                new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
+    return new_nodes
+
+
+def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode] | None:
+    new_nodes: list[TextNode] = []
+    for node in old_nodes:
+        if node.text_type == TextType.PLAIN:
+            pass
