@@ -32,7 +32,7 @@ def extract_markdown_images(text_md: str) -> list[tuple[str, str]]:
     return matches
 
 
-def extract_markdown_links(text_md: str) -> list[tuple[str, str]] | None:
+def extract_markdown_links(text_md: str) -> list[tuple[str, str]]:
     matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text_md)
     return matches
 
@@ -50,6 +50,8 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
                 remaining_text = splited_text[1]
                 new_nodes.append(TextNode(splited_text[0], TextType.PLAIN))
                 new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
+        else:
+            new_nodes.append(node)
     return new_nodes
 
 
@@ -57,4 +59,15 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode] | None:
     new_nodes: list[TextNode] = []
     for node in old_nodes:
         if node.text_type == TextType.PLAIN:
-            pass
+            # Extract text
+            link_match = extract_markdown_links(node.text)
+            # Split text
+            remaining_text = node.text
+            for match in link_match:
+                splited_text = remaining_text.split(f"[{match[0]}]({match[1]})", 1)
+                remaining_text = splited_text[1]
+                new_nodes.append(TextNode(splited_text[0], TextType.PLAIN))
+                new_nodes.append(TextNode(match[0], TextType.LINK, match[1]))
+        else:
+            new_nodes.append(node)
+    return new_nodes

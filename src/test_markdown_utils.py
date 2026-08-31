@@ -151,10 +151,10 @@ class TestInlineMarkdown(unittest.TestCase):
         self.assertEqual(
             new_nodes,
             [
-                TextType("this is text with a link ", TextType.PLAIN),
-                TextType("to boot dev", TextType.LINK, "https://www.boot.dev"),
-                TextType(" and ", TextType.PLAIN),
-                TextType(
+                TextNode("this is text with a link ", TextType.PLAIN),
+                TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+                TextNode(" and ", TextType.PLAIN),
+                TextNode(
                     "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
                 ),
             ],
