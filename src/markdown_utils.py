@@ -50,6 +50,8 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
                 remaining_text = splited_text[1]
                 new_nodes.append(TextNode(splited_text[0], TextType.PLAIN))
                 new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
+            if remaining_text:
+                new_nodes.append(TextNode(remaining_text, TextType.PLAIN))
         else:
             new_nodes.append(node)
     return new_nodes
@@ -63,11 +65,14 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode] | None:
             link_match = extract_markdown_links(node.text)
             # Split text
             remaining_text = node.text
+            # In case there is no link
             for match in link_match:
                 splited_text = remaining_text.split(f"[{match[0]}]({match[1]})", 1)
                 remaining_text = splited_text[1]
                 new_nodes.append(TextNode(splited_text[0], TextType.PLAIN))
                 new_nodes.append(TextNode(match[0], TextType.LINK, match[1]))
+            if remaining_text:
+                new_nodes.append(TextNode(remaining_text, TextType.PLAIN))
         else:
             new_nodes.append(node)
     return new_nodes
