@@ -94,3 +94,10 @@ def text_to_text_nodes(text: str) -> list[TextNode]:
     new_nodes = split_nodes_image(new_nodes)
 
     return new_nodes
+
+def markdown_to_blocks(text: str) -> list[str]:
+    splited_block = text.split("\n\n")
+    blocks: list[str] = []
+    for block in splited_block:
+        blocks.append(block.strip())
+    return blocks
