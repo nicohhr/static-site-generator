@@ -300,5 +300,82 @@ This is the same paragraph on a new line
             ],
         )
 
+    def test_heading_to_type_space(self):
+        input = "# normal triple heading"
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(
+            res, BlockType.HEADING
+        )
+
+    def test_heading_to_type_non_space(self):
+        input = "#normal triple heading"
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(
+            res, BlockType.PARAGRAPH
+        )
+
+    def test_code_to_type(self):
+        input = "```\nif var == True: return True```"
+
+        res: BlockType = block_to_block_type(input)
+        self.assertEqual(res, BlockType.CODE)
+
+    def test_code_to_type_bad_syntaxys(self):
+        input = "```\nif var == True: return True``"
+
+        res: BlockType = block_to_block_type(input)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_code_to_type_non_line(self):
+        input = "```if var == True: return True```"
+
+        res: BlockType = block_to_block_type(input)
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_quote_to_type(self):
+        input = "> Dorothy followed her through many of the beautiful rooms in her castle."
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(res, BlockType.QUOTE)
+
+    def test_quote_to_type_non_space(self):
+        input = ">Dorothy followed her through many of the beautiful rooms in her castle."
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(res, BlockType.QUOTE)
+
+    def test_unordered_to_type(self):
+        input = "- Dorothy followed\n - Second item"
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(res, BlockType.UNORDERED_LIST)
+
+    def test_unordered_to_type_bad(self):
+        input = "-Dorothy followed\n - Second item"
+        res: BlockType = block_to_block_type(input)
+
+        self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_ordered_list(self):
+        input = """
+1. First item
+2. Second item
+3. Third item
+4. Fourth item
+"""
+        res: BlockType = block_to_block_type(input)
+        self.assertEqual(res, BlockType.ORDERED_LIST)
+
+    def test_ordered_list_bad(self):
+        input = """
+1. First item
+2. Second item
+4. Third item
+4. Fourth item
+"""
+        res: BlockType = block_to_block_type(input)
+        self.assertEqual(res, BlockType.PARAGRAPH)
 if __name__ == "__main__":
     unittest.main()
