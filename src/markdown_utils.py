@@ -1,6 +1,8 @@
 import re
 
-from textnode import TextNode, TextType
+from src.htmlnode import HTMLNode
+from src.parentnode import ParentNode
+from textnode import TextNode, TextType, text_node_to_html_node
 from enum import Enum
 
 class BlockType(Enum):
@@ -130,3 +132,15 @@ def markdown_to_blocks(text: str) -> list[str]:
     for block in splited_block:
         blocks.append(block.strip())
     return blocks
+
+def markdown_to_html_node(markdown: str) -> HTMLNode | None:
+    blocks_md = markdown_to_blocks(markdown)
+    parent_node = ParentNode("md_node", [])
+    for block in blocks_md:
+        block_type = block_to_block_type(block)
+        match block_type:
+            case BlockType.HEADING:
+                pass
+
+
+    pass
