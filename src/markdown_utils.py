@@ -1,20 +1,7 @@
 import re
-from socket import inet_pton
 
-import htmlnode
-from src.htmlnode import HTMLNode
-from src.parentnode import ParentNode
-from textnode import TextNode, TextType, text_node_to_html_node
-from enum import Enum
-
-
-class BlockType(Enum):
-    PARAGRAPH = "paragraph"
-    HEADING = "heading"
-    CODE = "code"
-    QUOTE = "quote"
-    UNORDERED_LIST = "unordered_list"
-    ORDERED_LIST = "ordered_list"
+from textnode import TextNode, TextType
+from blocknode import BlockType, BlockNode
 
 
 def block_to_block_type(input_md: str) -> BlockType:
@@ -138,6 +125,7 @@ def markdown_to_blocks(text: str) -> list[str]:
     for block in splited_block:
         blocks.append(block.strip())
     return blocks
+
 
 # def markdown_to_html_node(markdown: str) -> HTMLNode | None:
 #     blocks_md = markdown_to_blocks(markdown)
