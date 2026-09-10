@@ -2,7 +2,6 @@ from enum import Enum
 from typing import override
 
 from leafnode import LeafNode
-from src.htmlnode import HTMLNode
 
 
 class TextType(Enum):
@@ -39,16 +38,16 @@ class TextNode:
 def text_node_to_html_node(text_node: TextNode):
     match text_node.text_type:
         case TextType.PLAIN:
-            return HTMLNode(None, text_node.text)
+            return LeafNode(None, text_node.text)
         case TextType.BOLD:
-            return HTMLNode("b", text_node.text)
+            return LeafNode("b", text_node.text)
         case TextType.ITALIC:
-            return HTMLNode("i", text_node.text)
+            return LeafNode("i", text_node.text)
         case TextType.CODE:
-            return HTMLNode("code", text_node.text)
+            return LeafNode("code", text_node.text)
         case TextType.LINK:
-            return HTMLNode("a", text_node.text, props={"href": ""})
+            return LeafNode("a", text_node.text, props={"href": ""})
         case TextType.IMAGE:
-            return HTMLNode("img", props={"src": "", "alt": ""})
+            return LeafNode("img", props={"src": "", "alt": ""})
         case _:
             raise Exception("TextType not implemented.")

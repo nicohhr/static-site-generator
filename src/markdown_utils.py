@@ -1,17 +1,21 @@
 import re
+from socket import inet_pton
 
+import htmlnode
 from src.htmlnode import HTMLNode
 from src.parentnode import ParentNode
 from textnode import TextNode, TextType, text_node_to_html_node
 from enum import Enum
 
+
 class BlockType(Enum):
-   PARAGRAPH = "paragraph"
-   HEADING = "heading"
-   CODE = "code"
-   QUOTE = "quote"
-   UNORDERED_LIST = "unordered_list"
-   ORDERED_LIST = "ordered_list"
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
+
 
 def block_to_block_type(input_md: str) -> BlockType:
     if re.match(r"^(#{1,6})\s+", input_md) is not None:
@@ -110,6 +114,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             new_nodes.append(node)
     return new_nodes
 
+
 def text_to_text_nodes(text: str) -> list[TextNode]:
     new_nodes = [TextNode(text, TextType.PLAIN)]
 
@@ -126,6 +131,7 @@ def text_to_text_nodes(text: str) -> list[TextNode]:
 
     return new_nodes
 
+
 def markdown_to_blocks(text: str) -> list[str]:
     splited_block = text.split("\n\n")
     blocks: list[str] = []
@@ -133,14 +139,14 @@ def markdown_to_blocks(text: str) -> list[str]:
         blocks.append(block.strip())
     return blocks
 
-def markdown_to_html_node(markdown: str) -> HTMLNode | None:
-    blocks_md = markdown_to_blocks(markdown)
-    parent_node = ParentNode("md_node", [])
-    for block in blocks_md:
-        block_type = block_to_block_type(block)
-        match block_type:
-            case BlockType.HEADING:
-                pass
-
-
-    pass
+# def markdown_to_html_node(markdown: str) -> HTMLNode | None:
+#     blocks_md = markdown_to_blocks(markdown)
+#     parent_node = ParentNode("md_node", [])
+#     for block in blocks_md:
+#         # Determine the type of block
+#         block_type = block_to_block_type(block)
+#         # Create new HTML node based in the block type
+#         match block_type:
+#             case BlockType.HEADING:
+#                 pass
+#     pass
