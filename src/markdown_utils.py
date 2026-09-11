@@ -1,28 +1,6 @@
 import re
 
 from textnode import TextNode, TextType
-from blocknode import BlockType, BlockNode
-
-
-def block_to_block_type(input_md: str) -> BlockType:
-    if re.match(r"^(#{1,6})\s+", input_md) is not None:
-        return BlockType.HEADING
-    if re.match(r"^(```)\n(.*)(```)", input_md):
-        return BlockType.CODE
-    if re.match(r"^>(.*)", input_md):
-        return BlockType.QUOTE
-    if re.match(r"^-\s+(.*)", input_md):
-        return BlockType.UNORDERED_LIST
-
-    # Ordered List
-    numbers: list = re.findall(r"^\s*(\d+)[.)]\s+.*", input_md, re.MULTILINE)
-    if len(numbers) != 0:
-        for n, num in enumerate(numbers, start=1):
-            if n != int(num):
-                return BlockType.PARAGRAPH
-        return BlockType.ORDERED_LIST
-
-    return BlockType.PARAGRAPH
 
 
 def split_nodes_delimiter(
@@ -117,24 +95,3 @@ def text_to_text_nodes(text: str) -> list[TextNode]:
     new_nodes = split_nodes_image(new_nodes)
 
     return new_nodes
-
-
-def markdown_to_blocks(text: str) -> list[str]:
-    splited_block = text.split("\n\n")
-    blocks: list[str] = []
-    for block in splited_block:
-        blocks.append(block.strip())
-    return blocks
-
-
-# def markdown_to_html_node(markdown: str) -> HTMLNode | None:
-#     blocks_md = markdown_to_blocks(markdown)
-#     parent_node = ParentNode("md_node", [])
-#     for block in blocks_md:
-#         # Determine the type of block
-#         block_type = block_to_block_type(block)
-#         # Create new HTML node based in the block type
-#         match block_type:
-#             case BlockType.HEADING:
-#                 pass
-#     pass

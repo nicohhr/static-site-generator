@@ -1,5 +1,6 @@
 import unittest
 
+from blocknode import *
 from markdown_utils import *
 from textnode import TextNode, TextType
 
