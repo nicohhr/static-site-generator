@@ -16,7 +16,6 @@ class BlockType(Enum):
     UNORDERED_LIST = "unordered_list"
     ORDERED_LIST = "ordered_list"
 
-
 class BlockNode(ParentNode):
     def __init__(
         self,
@@ -24,15 +23,6 @@ class BlockNode(ParentNode):
         children: list | None = None,
     ) -> None:
         super().__init__(tag=tag, children=children)
-
-    # @override
-    # def to_html(self) -> str:
-    #     # Final representation
-    #     f_repr = ""
-    #     if self.children is not None:
-    #         for children in self.children:
-    #             f_repr += children.to_html()
-    #     return f_repr
 
 def block_to_block_type(input_md: str) -> BlockType:
     if re.match(r"^(#{1,6})\s+", input_md) is not None:
@@ -120,6 +110,15 @@ def unordered_list_to_html(input: str)  -> BlockNode:
         for item in inline_items:
             leafs.append(LeafNode(tag="li", value=item))
     return BlockNode(tag="ul", children=leafs)
+
+def ordered_list_to_html(input: str) -> BlockNode:
+    # Ordered List
+    numered_items: list = re.findall(r"^\s*\d+[.)]\s+(.*)$", input, re.MULTILINE)
+    leafs: list[LeafNode] = []
+    if numered_items is not None:
+        for item in numered_items:
+            leafs.append(LeafNode(tag="li", value=item))
+    return BlockNode(tag="ol", children=leafs)
 
 def markdown_to_html_node(markdown: str) -> HTMLNode | None:
     blocks_md = markdown_to_blocks(markdown)

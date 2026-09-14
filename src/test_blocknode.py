@@ -91,4 +91,19 @@ the **same** even with inline stuff
 - item n + 1
 """
         node = markdown_to_html_node(md)
-        if node is not None: print(node.to_html())
+        if node is None:
+            self.fail("Expected a root HTML node")
+        self.assertEqual(
+            node.to_html(),
+            "<div><ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item n</li><li>item n + 1</li></ul></div>",
+        )
+
+    def test_ordered_list_to_html(self):
+        md = "1. First item\n2. Second item\n3. Third item"
+
+        node = ordered_list_to_html(md)
+
+        self.assertEqual(
+            node.to_html(),
+            "<ol><li>First item</li><li>Second item</li><li>Third item</li></ol>",
+        )
