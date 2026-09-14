@@ -111,6 +111,16 @@ def quote_to_html(input: str) -> BlockNode:
         leafs.append(text_node_to_html_node(text_node))
     return BlockNode(tag="blockquote", children=leafs)
 
+def unordered_list_to_html(input: str)  -> BlockNode:
+    # Split text into inlines
+    inline_items= re.findall(r"^-\s+(.*)$", input, re.MULTILINE)
+    # Convert inlines into leafnodes
+    leafs: list[LeafNode] = []
+    if inline_items is not None:
+        for item in inline_items:
+            leafs.append(LeafNode(tag="li", value=item))
+    return BlockNode(tag="ul", children=leafs)
+
 def markdown_to_html_node(markdown: str) -> HTMLNode | None:
     blocks_md = markdown_to_blocks(markdown)
     parent_node = ParentNode(tag="div", children=[])
@@ -138,5 +148,9 @@ def markdown_to_html_node(markdown: str) -> HTMLNode | None:
             case BlockType.QUOTE:
                 if parent_node.children is not None:
                     parent_node.children.append(quote_to_html(block))
+
+            case BlockType.UNORDERED_LIST:
+                if parent_node.children is not None:
+                    parent_node.children.append(unordered_list_to_html(block))
 
     return parent_node

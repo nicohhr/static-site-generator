@@ -81,3 +81,14 @@ the **same** even with inline stuff
                 html,
                 "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
             )
+
+    def test_unorderedlist_block(self):
+        md="""
+- item 1
+- item 2
+- item 3
+- item n
+- item n + 1
+"""
+        node = markdown_to_html_node(md)
+        if node is not None: print(node.to_html())
