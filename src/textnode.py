@@ -50,4 +50,4 @@ def text_node_to_html_node(text_node: TextNode):
         case TextType.IMAGE:
             return LeafNode("img", props={"src": "", "alt": ""})
         case _:
-            raise Exception("TextType not implemented.")
+            raise Exception("TextType not implemented.")  # noqa: TRY002
