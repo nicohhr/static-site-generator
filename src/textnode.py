@@ -46,8 +46,8 @@ def text_node_to_html_node(text_node: TextNode):
         case TextType.CODE:
             return LeafNode("code", text_node.text)
         case TextType.LINK:
-            return LeafNode("a", text_node.text, props={"href": ""})
+            return LeafNode("a", text_node.text, props={"href": text_node.url or ""})
         case TextType.IMAGE:
-            return LeafNode("img", props={"src": "", "alt": ""})
+            return LeafNode("img", "", props={"src": text_node.url or "", "alt": text_node.text})
         case _:
             raise Exception("TextType not implemented.")  # noqa: TRY002

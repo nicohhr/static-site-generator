@@ -36,6 +36,13 @@ def extract_markdown_links(text_md: str) -> list[tuple[str, str]]:
     matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text_md)
     return matches
 
+def extract_title(text_md: str) -> str | None:
+    title_match = re.search(r"^\s*#\s+(.+)$", text_md, re.MULTILINE)
+    if title_match:
+       title = title_match.group(1)
+    else:
+        raise Exception("No Title to extract")  # noqa: TRY002
+    return title.strip()
 
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     new_nodes: list[TextNode] = []

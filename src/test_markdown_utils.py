@@ -1,3 +1,4 @@
+from traceback import extract_stack
 import unittest
 
 from blocknode import *
@@ -378,5 +379,10 @@ This is the same paragraph on a new line
 """
         res: BlockType = block_to_block_type(input)
         self.assertEqual(res, BlockType.PARAGRAPH)
+
+    def test_mardown_title_extraction(self):
+        input = "# Title Test \n more text"
+        self.assertEqual("Title Test", extract_title(input))
+
 if __name__ == "__main__":
     unittest.main()

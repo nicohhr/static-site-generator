@@ -27,5 +27,18 @@ class TestTextNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
+
+    def test_image(self):
+        node = TextNode("Image description", TextType.IMAGE, "/image.png")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.value, "")
+        self.assertEqual(html_node.props, {"src": "/image.png", "alt": "Image description"})
+        self.assertEqual(html_node.to_html(), '<img src="/image.png" alt="Image description"></img>')
+
+    def test_link(self):
+        node = TextNode("Example", TextType.LINK, "https://example.com")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.to_html(), '<a href="https://example.com">Example</a>')
+
 if __name__ == "__main__":
     unittest.main()

@@ -4,7 +4,7 @@ from enum import Enum
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 from parentnode import ParentNode
-from src.markdown_utils import text_to_text_nodes
+from markdown_utils import text_to_text_nodes
 from textnode import *
 
 
@@ -120,7 +120,7 @@ def ordered_list_to_html(input: str) -> BlockNode:
             leafs.append(LeafNode(tag="li", value=item))
     return BlockNode(tag="ol", children=leafs)
 
-def markdown_to_html_node(markdown: str) -> HTMLNode | None:
+def markdown_to_html_node(markdown: str) -> HTMLNode:
     blocks_md = markdown_to_blocks(markdown)
     parent_node = ParentNode(tag="div", children=[])
 
