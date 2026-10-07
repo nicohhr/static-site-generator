@@ -133,11 +133,20 @@ def unordered_list_to_html(input: str)  -> BlockNode:
 def ordered_list_to_html(input: str) -> BlockNode:
     # Ordered List
     numered_items: list = re.findall(r"^\s*\d+[.)]\s+(.*)$", input, re.MULTILINE)
-    leafs: list[LeafNode] = []
-    if numered_items is not None:
-        for item in numered_items:
-            leafs.append(LeafNode(tag="li", value=item))
-    return BlockNode(tag="ol", children=leafs)
+    items: list[ParentNode] = []
+
+    for line in numered_items:
+        line_leafnodes = []
+        line_text_nodes = text_to_text_nodes(line)
+
+        for line_text_node in line_text_nodes:
+            # Convert to leafnodes
+            line_leafnodes.append(text_node_to_html_node(line_text_node))
+
+        # Each item is a collection of html leafnodes
+        items.append(ParentNode(tag="li", children=line_leafnodes))
+
+    return BlockNode(tag="ol", children=items)
 
 def markdown_to_html_node(markdown: str) -> HTMLNode:
     blocks_md = markdown_to_blocks(markdown)
@@ -170,5 +179,9 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
             case BlockType.UNORDERED_LIST:
                 if parent_node.children is not None:
                     parent_node.children.append(unordered_list_to_html(block))
+
+            case BlockType.ORDERED_LIST:
+                if parent_node.children is not None:
+                    parent_node.children.append(ordered_list_to_html(block))
 
     return parent_node

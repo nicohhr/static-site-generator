@@ -31,9 +31,10 @@ def generate_page():
     splited_page = []
     splited_page = re.split(r"{{ Content }}", new_page)
     splited_page.insert(1, page_html)
+    new_page = "".join(splited_page)
 
     with open(dest_path, mode='w', encoding='utf-8') as file:
-        file.write(page_html)
+        file.write(new_page)
 
 
 def main():
