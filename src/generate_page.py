@@ -35,7 +35,6 @@ def generate_page():
     with open(dest_path, mode='w', encoding='utf-8') as file:
         file.write(page_html)
 
-    # print(page_html)
 
 def main():
     generate_page()

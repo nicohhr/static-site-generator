@@ -115,20 +115,20 @@ def quote_to_html(input: str) -> BlockNode:
 def unordered_list_to_html(input: str)  -> BlockNode:
     # Split text into lines of text
     lines: list[str] = re.findall(r"^-\s+(.*)$", input, re.MULTILINE)
-    line_leafs: list[LeafNode] = []
+    items: list[ParentNode] = []
 
-    # Convert each line into texnodes
-    if len(lines) > 0:
-        lines_text_nodes: list[list[TextNode]] = []
-        for line in lines:
-            lines_text_nodes.append(text_to_text_nodes(line))
+    for line in lines:
+        line_leafnodes = []
+        line_text_nodes = text_to_text_nodes(line)
 
-        # Convert each textnode in each line into lefnodes
-        for line_text_nodes in lines_text_nodes:
-            for text_node in line_text_nodes:
-                line_leafs.append(LeafNode(tag="li", value=text_node_to_html_node(text_node).to_html()))
+        for line_text_node in line_text_nodes:
+            # Convert to leafnodes
+            line_leafnodes.append(text_node_to_html_node(line_text_node))
 
-    return BlockNode(tag="ul",children=line_leafs)
+        # Each item is a collection of html leafnodes
+        items.append(ParentNode(tag="li", children=line_leafnodes))
+
+    return BlockNode(tag="ul",children=items)
 
 def ordered_list_to_html(input: str) -> BlockNode:
     # Ordered List
