@@ -14,7 +14,12 @@ class ParentNode(HTMLNode):
         if self.children is None:
             raise ValueError("Children Missing")
         res = ""
+        # Should this part be recursive?
         for children in self.children:
+            if type(children) is list:
+                print("children type: ", type(children[0]))
+
             if children is not None:
                 res += children.to_html()
+
         return f"<{self.tag}{self.props_to_html()}>{res}</{self.tag}>"
