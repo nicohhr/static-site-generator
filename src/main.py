@@ -1,5 +1,6 @@
 from copy_static_dir import copy_static
-from generate_page import generate_page
+from generate_page import *
+
 
 def main():
     # Copy from static to public

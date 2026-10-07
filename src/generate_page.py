@@ -1,3 +1,4 @@
+from posix import mkdir
 import re
 
 from blocknode import *
@@ -31,7 +32,7 @@ def generate_page():
     splited_page = re.split(r"{{ Content }}", new_page)
     splited_page.insert(1, page_html)
 
-    with open(dest_path, mode='+w', encoding='utf-8') as file:
+    with open(dest_path, mode='w', encoding='utf-8') as file:
         file.write(page_html)
 
     # print(page_html)

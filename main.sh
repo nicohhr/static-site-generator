@@ -1,5 +1,10 @@
-# initializing programm
+#!/bin/sh
+set -eu
+
+cd "$(dirname "$0")"
+
+# Generate the site before starting the web server.
 python3 src/main.py
 
-# initializing web server
-cd public && python -m http.server 8888
+cd public
+exec python3 -m http.server 8888
