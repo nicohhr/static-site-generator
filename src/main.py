@@ -7,7 +7,7 @@ def main():
     copy_static()
 
     # Generate page to public/index.html from index.md using template.html
-    generate_page()
+    generate_pages_recursive()
 
 if __name__ == "__main__":
     main()
