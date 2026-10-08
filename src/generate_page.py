@@ -17,12 +17,6 @@ def generate_pages_recursive():
 
 def crawl_for_md(current_from_path: Path, current_dest_path: Path) -> tuple[Path, list[str]] | None:
     dir_items = [Path(i) for i in os.listdir(current_from_path)]
-#     from_items: list[Path] = []
-#     dest_items: list[Path] = []
-#
-#     for i in os.listdir(current_from_path):
-#         from_items.append(Path(current_from_path / i))
-#         dest_items.append(Path(current_dest_path / i))
 
     for item in dir_items:
         if Path(current_from_path / item).is_file() and item.suffix == '.md':
