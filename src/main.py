@@ -1,8 +1,12 @@
 from copy_static_dir import copy_static
 from generate_page import *
-
+from sys import argv
 
 def main():
+    # Reading script arguments
+    base_path = None if len(argv) == 1 else argv[1]
+    print(base_path)
+
     # Copy from static to public
     copy_static()
 

@@ -1,7 +1,6 @@
 import os
-from pathlib import Path
-from posix import mkdir
 import re
+from pathlib import Path
 
 from blocknode import *
 from markdown_utils import *
@@ -22,11 +21,12 @@ def crawl_for_md(current_from_path: Path, current_dest_path: Path) -> tuple[Path
         if Path(current_from_path / item).is_file() and item.suffix == '.md':
             # Generate html on correct directory
             generate_page(current_from_path / item, current_dest_path / item.with_suffix('.html'))
+
         elif Path(current_from_path / item).is_dir():
             # Call function in deeper founded dir
             crawl_for_md(current_from_path / item, current_dest_path / item)
 
-def generate_page(from_path: Path, dest_path: Path, template_path = template_path):
+def generate_page(from_path: Path, dest_path: Path, template_path = template_path) -> None:
     print(f"Generating page from {from_path} into {dest_path} using {template_path}")
     with open(from_path, encoding="utf-8") as file:
         md_file = file.read()
