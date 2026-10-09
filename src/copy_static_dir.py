@@ -7,15 +7,15 @@ logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def copy_static() -> None:
+def copy_static(dst_path:str = "public") -> None:
     # Define delete directory
-    shutil.rmtree(BASE_DIR / "public", ignore_errors=True)
+    shutil.rmtree(BASE_DIR / dst_path, ignore_errors=True)
 
     # Recrearte dir
-    os.mkdir(BASE_DIR / "public")
+    os.mkdir(BASE_DIR / dst_path)
 
     # List files
-    copy_files_tree(BASE_DIR / "static", BASE_DIR / "public")
+    copy_files_tree(BASE_DIR / "static", BASE_DIR / dst_path)
 
 def copy_files_tree(current_path: Path, destination: Path) -> None:
 
@@ -26,7 +26,7 @@ def copy_files_tree(current_path: Path, destination: Path) -> None:
         if os.path.isfile(current_path / item):
             # Copy file to destination
             shutil.copy(current_path / item, destination)
-            logger.warning("Copied: " + str(destination) +"/"+ item)
+            logger.warning("Copied: " + str(destination) + "/" + item)
         else:
             # Create directory
             os.mkdir(destination / item)

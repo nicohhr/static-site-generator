@@ -11,22 +11,22 @@ from_path = "content/index.md"
 dest_path = "public/index.html"
 template_path = "template.html"
 
-def generate_pages_recursive():
-    crawl_for_md(Path(from_base_path), Path(dest_base_path))
+def generate_pages_recursive(base_dir: str = "/", base_dst: str = dest_base_path):
+    crawl_for_md(Path(from_base_path), Path(base_dst), base_dir=base_dir)
 
-def crawl_for_md(current_from_path: Path, current_dest_path: Path) -> tuple[Path, list[str]] | None:
+def crawl_for_md(current_from_path: Path, current_dest_path: Path, base_dir: str) -> tuple[Path, list[str]] | None:
     dir_items = [Path(i) for i in os.listdir(current_from_path)]
 
     for item in dir_items:
         if Path(current_from_path / item).is_file() and item.suffix == '.md':
             # Generate html on correct directory
-            generate_page(current_from_path / item, current_dest_path / item.with_suffix('.html'))
+            generate_page(base_dir, current_from_path / item, current_dest_path / item.with_suffix('.html'))
 
         elif Path(current_from_path / item).is_dir():
             # Call function in deeper founded dir
-            crawl_for_md(current_from_path / item, current_dest_path / item)
+            crawl_for_md(current_from_path / item, current_dest_path / item, base_dir)
 
-def generate_page(from_path: Path, dest_path: Path, template_path = template_path) -> None:
+def generate_page(base_dir:str, from_path: Path, dest_path: Path, template_path = template_path) -> None:
     print(f"Generating page from {from_path} into {dest_path} using {template_path}")
     with open(from_path, encoding="utf-8") as file:
         md_file = file.read()
@@ -50,6 +50,11 @@ def generate_page(from_path: Path, dest_path: Path, template_path = template_pat
     splited_page = re.split(r"{{ Content }}", new_page)
     splited_page.insert(1, page_html)
     new_page = "".join(splited_page)
+
+    # Replace any instance of href and src to the base_dir
+    if base_dir != "/":
+        new_page = re.sub(r'href="/', f'href="{base_dir}', new_page)
+        new_page = re.sub(r'src="/', f'src="{base_dir}', new_page)
 
     # Making sure the path exist
     dest_path.parent.mkdir(parents=True, exist_ok=True)
